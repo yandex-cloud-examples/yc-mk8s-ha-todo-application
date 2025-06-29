@@ -1,0 +1,140 @@
+replicaCount: 1
+
+image:
+  repository: cr.yandex/crpnl3q3e9hs5sr3088m/app/todo-backend
+  tag: "v0.0.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: NodePort
+  port: 8080
+  externalTrafficPolicy: Local
+#  loadBalancerIP: ""
+
+db:
+  host: 
+  port: "6432"
+  database: todo
+  tz: Europe/Moscow
+  sslMode: disable
+  user: 
+  password:
+
+#roDb:
+#  host: 
+#  port: "6432"
+#  database: todo
+#  tz: Europe/Moscow
+#  sslMode: prefer
+#  user: 
+#  password:
+
+topologyAwareRouting: false
+
+
+env: []
+
+ingress:
+  enabled: false
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  failureThreshold: 6
+  periodSeconds: 2
+  successThreshold: 1
+  timeoutSeconds: 1
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  failureThreshold: 3
+  periodSeconds: 2
+  successThreshold: 1
+  timeoutSeconds: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 1
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: 
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        matchExpressions:
+          labelSelector:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+              - todo
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+              - backend
+        topologyKey: "topology.kubernetes.io/zone"
+
+migrations:
+  activeDeadlineSeconds: 300
+  command:
+    - /usr/bin/todo
+    - migrate
+  podAnnotations: {}
+  podSecurityContext: {}
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}

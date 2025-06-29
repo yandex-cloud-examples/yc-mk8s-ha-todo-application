@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "backend.fullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "-10"
+data:
+{{- with .Values.db }}
+{{- with .host }}
+  DB_HOST: "{{ . }}"
+{{- end }}
+{{- with .port }}
+  DB_PORT: "{{ . }}"
+{{- end }}
+{{- with .database }}
+  DB_DATABASE: "{{ . }}"
+{{- end }}
+{{- with .tz }}
+  DB_TZ: "{{ . }}"
+{{- end }}
+{{- with .sslMode }}
+  DB_SSL_MODE: "{{ . }}"
+{{- end }}
+{{- end }}
+{{- with .Values.roDb }}
+{{- if .host }}
+  RO_DB_HOST: "{{ .host }}"
+{{- else if .clusterNodes }}
+  RO_DB_HOST: {{ include "backend.fullname" $ }}-ro-db
+{{- end }}
+{{- with .port }}
+  RO_DB_PORT: "{{ . }}"
+{{- end }}
+{{- with .database }}
+  RO_DB_DATABASE: "{{ . }}"
+{{- end }}
+{{- with .tz }}
+  RO_DB_TZ: "{{ . }}"
+{{- end }}
+{{- with .sslMode }}
+  RO_DB_SSL_MODE: "{{ . }}"
+{{- end }}
+{{- with .topologyAwareRouting }}
+  RO_TOPOLOGY_AWARE_ROUTING: "{{ . }}"
+{{- end }}
+{{- end }}
