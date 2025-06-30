@@ -58,7 +58,7 @@ resource "helm_release" "application" {
   count            = var.app_enabled == true ? 1 : 0
   name             = "todo"
   namespace        = "todo"
-  repository       = "./helm" ## oci://cr.yandex/crpfncgki118t1...
+  repository       = "oci://cr.yandex/docs-registry/helm/todo"
   chart            = "todo"
   version          = "0.1.0"
   create_namespace = true
