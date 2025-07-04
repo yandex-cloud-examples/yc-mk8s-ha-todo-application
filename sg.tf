@@ -84,13 +84,13 @@ resource "yandex_vpc_security_group_rule" "k8s_cluster_node_kube_proxy" {
   port                   = 10256
 }
 
-resource "yandex_vpc_security_group_rule" "k8s_cluster_node_metric_server" {
+resource "yandex_vpc_security_group_rule" "k8s_cluster_pods" {
   security_group_binding = yandex_vpc_security_group.k8s_cluster.id
   direction              = "egress"
   protocol               = "TCP"
-  description            = "Access to metric-server pods"
+  description            = "Access to pods"
   v4_cidr_blocks         = [var.k8s_cluster_ipv4_range]
-  port                   = 4443
+  port                   = -1
 }
 
 resource "yandex_vpc_security_group" "k8s_nodes" {
@@ -356,6 +356,7 @@ resource "null_resource" "sg_k8s_cluster" {
     yandex_vpc_security_group_rule.k8s_cluster_node_nlb_hc,
     yandex_vpc_security_group_rule.k8s_cluster_node_kublet,
     yandex_vpc_security_group_rule.k8s_cluster_node_kube_proxy,
+    yandex_vpc_security_group_rule.k8s_cluster_pods,
   ]
 }
 

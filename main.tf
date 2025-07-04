@@ -38,7 +38,7 @@ resource "time_sleep" "wait_infra" {
   ]
 
   # create_duration = "60s"
-  destroy_duration = "90s"
+  destroy_duration = "180s"
 }
 
 resource "null_resource" "infra" {
