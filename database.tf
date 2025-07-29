@@ -19,9 +19,6 @@ resource "yandex_mdb_postgresql_cluster" "this" {
   config {
     version = var.db_cluster_version
     postgresql_config = {
-      #max_connections                = 795
-      #enable_parallel_hash           = true
-      #autovacuum_vacuum_scale_factor = 0.34
       default_transaction_isolation = "TRANSACTION_ISOLATION_READ_COMMITTED"
       shared_preload_libraries      = "SHARED_PRELOAD_LIBRARIES_AUTO_EXPLAIN,SHARED_PRELOAD_LIBRARIES_PG_HINT_PLAN"
     }

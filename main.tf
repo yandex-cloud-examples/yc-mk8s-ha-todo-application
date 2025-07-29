@@ -37,7 +37,6 @@ resource "time_sleep" "wait_infra" {
     yandex_cm_certificate.le_cert
   ]
 
-  # create_duration = "60s"
   destroy_duration = "180s"
 }
 

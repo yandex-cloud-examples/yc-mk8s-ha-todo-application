@@ -1,5 +1,4 @@
 locals {
-  #  dns_domain_trim = var.dns_zone_id == null ? trimsuffix(var.target_host, ".") : trimsuffix(data.yandex_dns_zone.dns_zone.zone, ".")
   dns_domain_trim = trimsuffix(var.target_host, ".")
   cert_id         = yandex_cm_certificate.le_cert.id
 }

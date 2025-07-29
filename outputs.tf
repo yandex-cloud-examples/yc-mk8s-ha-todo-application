@@ -25,7 +25,3 @@ output "db_master_fqdn" {
   description = "Database master fqdn"
   value       = "c-${yandex_mdb_postgresql_cluster.this.id}.rw.mdb.yandexcloud.net"
 }
-
-#output "agent_id" {
-#  value = yandex_loadtesting_agent.load_generator.id
-#}
