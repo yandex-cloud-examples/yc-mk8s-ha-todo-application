@@ -294,56 +294,6 @@ resource "yandex_vpc_security_group_rule" "db_healthcheck" {
   predefined_target      = "loadbalancer_healthchecks"
 }
 
-resource "yandex_vpc_security_group" "alb" {
-  name        = "k8s-alb${local.name_suffix}"
-  description = "alb security group"
-  network_id  = local.network_id
-  folder_id   = local.folder_id
-
-  ingress {
-    protocol       = "ICMP"
-    description    = "ping"
-    v4_cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol       = "TCP"
-    description    = "http"
-    v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = 80
-  }
-
-  ingress {
-    protocol       = "TCP"
-    description    = "https"
-    v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = 443
-  }
-
-  ingress {
-    protocol          = "TCP"
-    description       = "Rule allows availability checks of load balancer"
-    predefined_target = "loadbalancer_healthchecks"
-    from_port         = 0
-    to_port           = 65535
-  }
-
-  egress {
-    protocol       = "TCP"
-    description    = "Enable traffic from ALB to K8s services"
-    v4_cidr_blocks = local.k8s_node_cidr_blocks
-    from_port      = 30000
-    to_port        = 32767
-  }
-
-  egress {
-    protocol       = "TCP"
-    description    = "Enable probes from ALB to K8s"
-    v4_cidr_blocks = local.k8s_node_cidr_blocks
-    port           = 10501
-  }
-}
-
 resource "null_resource" "sg_k8s_cluster" {
   depends_on = [
     yandex_vpc_security_group.k8s_cluster,
@@ -399,6 +349,5 @@ resource "null_resource" "sg" {
     null_resource.sg_k8s_cluster,
     null_resource.sg_k8s_nodes,
     null_resource.sg_db,
-    yandex_vpc_security_group.alb,
   ]
 }

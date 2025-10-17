@@ -1,14 +1,9 @@
 locals {
-  alb_ip_addr = local.ip_addr
-  app_values  = <<-EOF
+  app_values = <<-EOF
     ingress:
       enabled: true
-      className: ""
-      annotations:
-        ingress.alb.yc.io/group-name: ingress
-        ingress.alb.yc.io/subnets: "${join(",", local.k8s_node_subnet_ids)}"
-        ingress.alb.yc.io/external-ipv4-address: "${local.alb_ip_addr}"
-        ingress.alb.yc.io/security-groups: ${yandex_vpc_security_group.alb.id}
+      className: gwin-default
+      annotations: ${jsonencode(local.gwin_annotations)}
       hosts:
         - host: ${var.target_host}
           paths:
