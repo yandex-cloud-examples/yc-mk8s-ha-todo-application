@@ -159,7 +159,7 @@ resource "yandex_kubernetes_node_group" "cluster_node_group_1" {
     }
 
     scheduling_policy {
-      preemptible = false
+      preemptible = var.k8s_node_preemptible
     }
 
     container_runtime {
@@ -224,7 +224,7 @@ resource "yandex_kubernetes_node_group" "cluster_node_group_2" {
     }
 
     scheduling_policy {
-      preemptible = false
+      preemptible = var.k8s_node_preemptible
     }
 
     container_runtime {
@@ -289,7 +289,7 @@ resource "yandex_kubernetes_node_group" "cluster_node_group_3" {
     }
 
     scheduling_policy {
-      preemptible = false
+      preemptible = var.k8s_node_preemptible
     }
 
     container_runtime {
@@ -425,10 +425,16 @@ variable "k8s_node_disk_size" {
   default     = "93"
 }
 
+variable "k8s_node_preemptible" {
+  type        = bool
+  description = "Kubernetes node preemptible"
+  default     = false
+}
+
 variable "k8s_node_name_prefix" {
   type        = string
   description = "Kubernetes node name prefix"
-  default     = "topo"
+  default     = "wrk"
 }
 
 variable "k8s_nodes_count" {

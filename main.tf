@@ -22,7 +22,7 @@ resource "yandex_resourcemanager_folder" "folder" {
   count       = var.folder_create == true ? 1 : 0
   name        = "${local.folder_name}${local.name_suffix}"
   description = var.folder_description
-  timeouts {
+  timeouts = {
     create = "10m"
     delete = "2h"
   }
@@ -32,7 +32,7 @@ resource "time_sleep" "wait_infra" {
   depends_on = [
     null_resource.kubernetes,
     yandex_mdb_postgresql_cluster.this,
-    helm_release.alb_ingress,
+    helm_release.gwin,
     helm_release.node_local_dns,
     yandex_cm_certificate.le_cert
   ]

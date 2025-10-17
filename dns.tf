@@ -6,13 +6,14 @@ locals {
   dns_domain       = trimsuffix(local.dns_domain_t, ".")
   dns_hostnames    = var.dns_hostnames == null ? local.dns_hostname_t : var.dns_hostnames
   dns_zone_id      = var.dns_zone_id == null ? yandex_dns_zone.dns_zone[0].id : var.dns_zone_id
+  dns_folder_id    = var.dns_folder_id == null ? local.folder_id : var.dns_folder_id
 }
 
 resource "yandex_dns_zone" "dns_zone" {
   count       = var.dns_zone_id == null ? 1 : 0
   name        = var.dns_zone_name == null ? replace(local.dns_domain, ".", "-") : var.dns_zone_name
   description = var.dns_zone_description == null ? "Zone ${local.dns_domain}" : var.dns_zone_description
-  folder_id   = local.folder_id
+  folder_id   = local.dns_folder_id
   zone        = "${local.dns_domain}."
   public      = true
 }
@@ -64,7 +65,13 @@ resource "null_resource" "dns" {
 
 variable "dns_zone_id" {
   type        = string
-  description = "dns_zone_id"
+  description = "Existing dns zone id"
+  default     = null
+}
+
+variable "dns_folder_id" {
+  type        = string
+  description = "Exiting dns zone folder"
   default     = null
 }
 
